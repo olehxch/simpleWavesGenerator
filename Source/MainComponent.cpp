@@ -88,14 +88,19 @@ public:
         m_time = 0.0;
         m_deltaTime = 1 / sampleRate;
     }
-
+    
     void getNextAudioBlock(const AudioSourceChannelInfo& bufferToFill) override
-    {
-        // Your audio-processing code goes here!
-        // For more details, see the help for AudioProcessor::getNextAudioBlock()
-        // Right now we are not producing any data, in which case we need to clear the buffer
-        // (to prevent the output of random noise)
-        //bufferToFill.clearActiveBufferRegion();
+    {       
+        // generate sin wave in mono
+        float *monoBuffer = new float[bufferToFill.numSamples];
+        float f = m_frequency;
+
+        for (int sample = 0; sample < bufferToFill.numSamples; ++sample) {    
+            float value = m_amplitude * sin(2 * double_Pi*f*m_time + m_phase);
+
+            monoBuffer[sample] = value;
+            m_time += m_deltaTime;
+        }
 
         // iterate over all available output channels
         m_time = 0;
@@ -105,11 +110,7 @@ public:
             float* const buffer = bufferToFill.buffer->getWritePointer(channel, bufferToFill.startSample);
 
             for (int sample = 0; sample < bufferToFill.numSamples; ++sample) {
-                float f = m_frequency;
-                float value = m_amplitude * sin(2 * double_Pi*f*m_time + m_phase);
-
-                buffer[sample] = value;
-                m_time += m_deltaTime;
+                buffer[sample] = monoBuffer[sample];
             }
         }
     }
