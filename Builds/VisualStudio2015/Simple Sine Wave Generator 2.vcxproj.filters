@@ -1974,6 +1974,9 @@
     <ClCompile Include="..\..\Source\WhiteNoise.cpp">
       <Filter>Simple Sine Wave Generator 2\Source</Filter>
     </ClCompile>
+    <ClCompile Include="..\..\Source\OscillatorWave.cpp">
+      <Filter>Simple Sine Wave Generator 2\Source</Filter>
+    </ClCompile>
   </ItemGroup>
   <ItemGroup>
     <ClInclude Include="C:\JUCE\modules\juce_audio_basics\buffers\juce_AudioDataConverters.h">
@@ -3809,6 +3812,9 @@
       <Filter>Simple Sine Wave Generator 2\Source</Filter>
     </ClInclude>
     <ClInclude Include="..\..\Source\WhiteNoise.h">
+      <Filter>Simple Sine Wave Generator 2\Source</Filter>
+    </ClInclude>
+    <ClInclude Include="..\..\Source\OscillatorWave.h">
       <Filter>Simple Sine Wave Generator 2\Source</Filter>
     </ClInclude>
   </ItemGroup>

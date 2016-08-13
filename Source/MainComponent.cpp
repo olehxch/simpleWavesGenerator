@@ -9,109 +9,31 @@
 #include "WhiteNoise.h"
 #include "SineWave.h"
 
+#include "OscillatorWave.h"
+
 //==============================================================================
 /*
 This component lives inside our window, and this is where you should put all
 your controls and content.
 */
-class MainContentComponent : public AudioAppComponent, public Slider::Listener, public TextButton::Listener
+class MainContentComponent : public AudioAppComponent
 {
 public:
     //==============================================================================
     MainContentComponent()
     {
-        setSize(480, 170);
-
-        // specify the number of input and output channels that we want to open
+        setSize(800, 600);
         setAudioChannels(2, 2);
 
-        // volume slider
-        addAndMakeVisible(volumeSlider);
-        volumeSlider.setRange(-96, 6);
-        volumeSlider.setTextValueSuffix(" db");
-        volumeSlider.setValue(-12);
-        volumeSlider.addListener(this);
-        //volumeSlider.setSkewFactorFromMidPoint(0.5);
+        addAndMakeVisible(sineWaveOsc);
+        addAndMakeVisible(sineWaveOsc2);
 
-        volumeLabel.setText("Volume", dontSendNotification);
-        volumeLabel.attachToComponent(&volumeSlider, true);
-
-        // phase slider
-        addAndMakeVisible(phaseSlider);
-        phaseSlider.setRange(0.0, 1.0);
-        phaseSlider.setTextValueSuffix(" ~");
-        phaseSlider.setValue(0.0);
-        phaseSlider.addListener(this);
-
-        phaseLabel.setText("Phase", dontSendNotification);
-        phaseLabel.attachToComponent(&phaseSlider, true);
-
-        // freq slider
-        addAndMakeVisible(freqSlider);
-        freqSlider.setRange(10, 22000);
-        freqSlider.setTextValueSuffix(" Hz");
-        freqSlider.setValue(500.0);
-        freqSlider.addListener(this);
-        freqSlider.setSkewFactorFromMidPoint(500);
-
-        freqLabel.setText("Freq", dontSendNotification);
-        freqLabel.attachToComponent(&freqSlider, true);
-
-        // mute button
-        addAndMakeVisible(m_mute);
-        m_mute.setButtonText("Mute");
-        m_mute.addListener(this);
-        m_mute.setEnabled(true);
-
-        // noise
-        // volume slider
-        addAndMakeVisible(noiseVolumeSlider);
-        noiseVolumeSlider.setRange(-96, 6);
-        noiseVolumeSlider.setTextValueSuffix(" db");
-        noiseVolumeSlider.setValue(-36);
-        noiseVolumeSlider.addListener(this);
-        //volumeSlider.setSkewFactorFromMidPoint(0.5);
-
-        volumeLabel.setText("Noise", dontSendNotification);
-        volumeLabel.attachToComponent(&noiseVolumeSlider, true);
+        
     }
 
     ~MainContentComponent()
     {
         shutdownAudio();
-    }
-
-    void buttonClicked(Button* button) override
-    {
-        if (button == &m_mute) {
-            if (!sin1.isMuted()) {
-                sin1.mute();
-                whiteNoise.mute();
-            } else {
-                sin1.unmute();
-                whiteNoise.unmute();
-            }
-        }
-    }
-
-    void sliderValueChanged(Slider *slider) {
-        if (slider == &volumeSlider) {
-            double level = pow(10, ((float)volumeSlider.getValue() / 20.0));
-            sin1.setAmplitude(level);
-        }
-
-        if (slider == &noiseVolumeSlider) {
-            double level = pow(10, ((float)noiseVolumeSlider.getValue() / 20.0));
-            whiteNoise.setLevel(level);
-        }
-
-        if (slider == &freqSlider) {
-            sin1.setFrequency(freqSlider.getValue());
-        }
-
-        if (slider == &phaseSlider) {
-            sin1.setPhase(phaseSlider.getValue());
-        }
     }
 
     //==============================================================================
@@ -140,9 +62,8 @@ public:
 
         // generate sin wave in mono
         for (int sample = 0; sample < bufferToFill.numSamples; ++sample) {
-            //float value = m_amplitude * sin(2 * double_Pi * f * m_time + m_phase);
-            float value = sin1.nextSample(m_time);
-            float noise = whiteNoise.nextSample();
+            float value = sineWaveOsc.nextSample(m_time) + sineWaveOsc2.nextSample(m_time);
+            float noise = 0.0; // whiteNoise.nextSample();
 
             monoBuffer[sample] = value + noise;
             m_time += m_deltaTime;
@@ -177,41 +98,19 @@ public:
 
     void resized() override
     {
-        const int sliderLeft = 50;
-        volumeSlider.setBounds(sliderLeft, 20, getWidth() - sliderLeft - 10, 20);
-        phaseSlider.setBounds(sliderLeft, 50, getWidth() - sliderLeft - 10, 20);
-        freqSlider.setBounds(sliderLeft, 80, getWidth() - sliderLeft - 10, 20);
-        noiseVolumeSlider.setBounds(sliderLeft, 110, getWidth() - sliderLeft - 10, 20);
+        sineWaveOsc.setBounds(0, 0, 440, 130);
+        sineWaveOsc2.setBounds(0, 130, 440, 130);
 
-        m_mute.setBounds(10, 140, getWidth() - 20, 20);
     }
 
 private:
     //==============================================================================
-    SineWave sin1;
-    SineWave sin2;
-
-    WhiteNoise whiteNoise;
+    OscillatorWave sineWaveOsc;
+    OscillatorWave sineWaveOsc2;
 
     // Your private member variables go here...
     float m_time;
     float m_deltaTime;
-
-    float m_targetFrequency;
-    float m_deltaFrequency;
-
-    // GUI
-    Slider volumeSlider;
-    Slider freqSlider;
-    Slider phaseSlider;
-    Label volumeLabel;
-    Label freqLabel;
-    Label phaseLabel;
-
-    // noise
-    Slider noiseVolumeSlider;
-
-    TextButton m_mute;
 
     JUCE_DECLARE_NON_COPYABLE_WITH_LEAK_DETECTOR(MainContentComponent)
 };
