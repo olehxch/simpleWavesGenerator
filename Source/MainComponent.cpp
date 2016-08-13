@@ -5,18 +5,20 @@
 #include "juce_gui_basics\widgets\juce_Slider.h"
 #include "juce_gui_basics\widgets\juce_Label.h"
 
+#include <limits>
+
 //==============================================================================
 /*
 This component lives inside our window, and this is where you should put all
 your controls and content.
 */
-class MainContentComponent : public AudioAppComponent, public Slider::Listener
+class MainContentComponent : public AudioAppComponent, public Slider::Listener, public TextButton::Listener
 {
 public:
     //==============================================================================
     MainContentComponent()
     {
-        setSize(480, 120);
+        setSize(480, 170);
 
         // specify the number of input and output channels that we want to open
         setAudioChannels(2, 2);
@@ -25,7 +27,7 @@ public:
         addAndMakeVisible(volumeSlider);
         volumeSlider.setRange(-96, 6);
         volumeSlider.setTextValueSuffix(" db");
-        volumeSlider.setValue(-6);
+        volumeSlider.setValue(-12);
         volumeSlider.addListener(this);
         //volumeSlider.setSkewFactorFromMidPoint(0.5);
 
@@ -52,6 +54,24 @@ public:
 
         freqLabel.setText("Freq", dontSendNotification);
         freqLabel.attachToComponent(&freqSlider, true);
+
+        // mute button
+        addAndMakeVisible(m_mute);
+        m_mute.setButtonText("Mute");
+        m_mute.addListener(this);
+        m_mute.setEnabled(true);
+
+        // noise
+        // volume slider
+        addAndMakeVisible(noiseVolumeSlider);
+        noiseVolumeSlider.setRange(-96, 6);
+        noiseVolumeSlider.setTextValueSuffix(" db");
+        noiseVolumeSlider.setValue(-36);
+        noiseVolumeSlider.addListener(this);
+        //volumeSlider.setSkewFactorFromMidPoint(0.5);
+
+        volumeLabel.setText("Noise", dontSendNotification);
+        volumeLabel.attachToComponent(&noiseVolumeSlider, true);
     }
 
     ~MainContentComponent()
@@ -59,13 +79,33 @@ public:
         shutdownAudio();
     }
 
+    void buttonClicked(Button* button) override
+    {
+        if (button == &m_mute) {
+            if (m_amplitude > 0.0) {
+                m_amplitude = 0.0;
+                m_noiseLevel = 0.0;
+            }
+            else {
+                m_amplitude = m_prevVolume;
+                m_noiseLevel = m_prevNoiseLevel;
+            }
+        }
+    }
+
     void sliderValueChanged(Slider *slider) {
         if (slider == &volumeSlider) {
-            m_amplitude = pow(10, ((float)volumeSlider.getValue() / 20.0) );
+            m_amplitude = pow(10, ((float)volumeSlider.getValue() / 20.0));
+            m_prevVolume = m_amplitude;
+        }
+
+        if (slider == &noiseVolumeSlider) {
+            m_noiseLevel = pow(10, ((float)noiseVolumeSlider.getValue() / 20.0));
+            m_prevNoiseLevel = m_noiseLevel;
         }
 
         if (slider == &freqSlider) {
-            m_frequency = (float)freqSlider.getValue();
+            m_targetFrequency = (float)freqSlider.getValue();
         }
 
         if (slider == &phaseSlider) {
@@ -84,26 +124,58 @@ public:
 
         m_amplitude = 0.5;
         m_frequency = 500;
+        m_targetFrequency = 500;
         m_phase = 0.0;
         m_time = 0.0;
         m_deltaTime = 1 / sampleRate;
+
+        m_noiseLevel = 0.0;
     }
-    
+
     void getNextAudioBlock(const AudioSourceChannelInfo& bufferToFill) override
-    {       
-        // generate sin wave in mono
+    {
+        if (m_time >= std::numeric_limits<float>::max()) {
+            m_time = 0.0;
+        }
+
         float *monoBuffer = new float[bufferToFill.numSamples];
         float f = m_frequency;
 
-        for (int sample = 0; sample < bufferToFill.numSamples; ++sample) {    
-            float value = m_amplitude * sin(2 * double_Pi*f*m_time + m_phase);
+        // TODO fix it later
+        // do not use target freq now
+        m_frequency = m_targetFrequency;
 
-            monoBuffer[sample] = value;
-            m_time += m_deltaTime;
+        Random random;
+        // check if target frequency was changed
+        if (m_frequency != m_targetFrequency) {
+            m_deltaFrequency = m_targetFrequency - m_frequency / bufferToFill.numSamples;
+
+            for (int sample = 0; sample < bufferToFill.numSamples; ++sample) {
+                float value = m_amplitude * sin(2 * double_Pi*f*m_time + m_phase);
+
+                monoBuffer[sample] = value;
+                
+                // update time variables
+                m_time += m_deltaTime;
+
+                // TODO not in use
+                m_frequency += m_deltaFrequency;
+            }
+
+            m_frequency = m_targetFrequency;
+        }
+        else {
+            // generate sin wave in mono
+            for (int sample = 0; sample < bufferToFill.numSamples; ++sample) {
+                float value = m_amplitude * sin(2 * double_Pi*f*m_time + m_phase);
+                float noise = m_noiseLevel * random.nextFloat();
+
+                monoBuffer[sample] = value + noise;
+                m_time += m_deltaTime;
+            }
         }
 
         // iterate over all available output channels
-        m_time = 0;
         for (int channel = 0; channel < bufferToFill.buffer->getNumChannels(); ++channel)
         {
             // Get a pointer to the start sample in the buffer for this audio output channel
@@ -138,6 +210,9 @@ public:
         volumeSlider.setBounds(sliderLeft, 20, getWidth() - sliderLeft - 10, 20);
         phaseSlider.setBounds(sliderLeft, 50, getWidth() - sliderLeft - 10, 20);
         freqSlider.setBounds(sliderLeft, 80, getWidth() - sliderLeft - 10, 20);
+        noiseVolumeSlider.setBounds(sliderLeft, 110, getWidth() - sliderLeft - 10, 20);
+
+        m_mute.setBounds(10, 140, getWidth() - 20, 20);
     }
 
 private:
@@ -150,6 +225,12 @@ private:
     float m_time;
     float m_deltaTime;
 
+    float m_targetFrequency;
+    float m_deltaFrequency;
+
+    float m_prevVolume;
+    float m_prevNoiseLevel;
+
     // GUI
     Slider volumeSlider;
     Slider freqSlider;
@@ -157,6 +238,12 @@ private:
     Label volumeLabel;
     Label freqLabel;
     Label phaseLabel;
+
+    // noise
+    Slider noiseVolumeSlider;
+    float m_noiseLevel;
+
+    TextButton m_mute;
 
     JUCE_DECLARE_NON_COPYABLE_WITH_LEAK_DETECTOR(MainContentComponent)
 };
