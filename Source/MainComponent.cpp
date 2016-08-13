@@ -6,6 +6,8 @@
 #include "juce_gui_basics\widgets\juce_Label.h"
 
 #include <limits>
+#include "WhiteNoise.h"
+#include "SineWave.h"
 
 //==============================================================================
 /*
@@ -82,34 +84,33 @@ public:
     void buttonClicked(Button* button) override
     {
         if (button == &m_mute) {
-            if (m_amplitude > 0.0) {
-                m_amplitude = 0.0;
-                m_noiseLevel = 0.0;
-            }
-            else {
-                m_amplitude = m_prevVolume;
-                m_noiseLevel = m_prevNoiseLevel;
+            if (!sin1.isMuted()) {
+                sin1.mute();
+                whiteNoise.mute();
+            } else {
+                sin1.unmute();
+                whiteNoise.unmute();
             }
         }
     }
 
     void sliderValueChanged(Slider *slider) {
         if (slider == &volumeSlider) {
-            m_amplitude = pow(10, ((float)volumeSlider.getValue() / 20.0));
-            m_prevVolume = m_amplitude;
+            double level = pow(10, ((float)volumeSlider.getValue() / 20.0));
+            sin1.setAmplitude(level);
         }
 
         if (slider == &noiseVolumeSlider) {
-            m_noiseLevel = pow(10, ((float)noiseVolumeSlider.getValue() / 20.0));
-            m_prevNoiseLevel = m_noiseLevel;
+            double level = pow(10, ((float)noiseVolumeSlider.getValue() / 20.0));
+            whiteNoise.setLevel(level);
         }
 
         if (slider == &freqSlider) {
-            m_targetFrequency = (float)freqSlider.getValue();
+            sin1.setFrequency(freqSlider.getValue());
         }
 
         if (slider == &phaseSlider) {
-            m_phase = (float)phaseSlider.getValue();
+            sin1.setPhase(phaseSlider.getValue());
         }
     }
 
@@ -122,14 +123,8 @@ public:
         // but be careful - it will be called on the audio thread, not the GUI thread.
         // For more details, see the help for AudioProcessor::prepareToPlay()
 
-        m_amplitude = 0.5;
-        m_frequency = 500;
-        m_targetFrequency = 500;
-        m_phase = 0.0;
         m_time = 0.0;
         m_deltaTime = 1 / sampleRate;
-
-        m_noiseLevel = 0.0;
     }
 
     void getNextAudioBlock(const AudioSourceChannelInfo& bufferToFill) override
@@ -139,41 +134,20 @@ public:
         }
 
         float *monoBuffer = new float[bufferToFill.numSamples];
-        float f = m_frequency;
-
-        // TODO fix it later
-        // do not use target freq now
-        m_frequency = m_targetFrequency;
 
         Random random;
         // check if target frequency was changed
-        if (m_frequency != m_targetFrequency) {
-            m_deltaFrequency = m_targetFrequency - m_frequency / bufferToFill.numSamples;
 
-            for (int sample = 0; sample < bufferToFill.numSamples; ++sample) {
-                float value = m_amplitude * sin(2 * double_Pi*f*m_time + m_phase);
+        // generate sin wave in mono
+        for (int sample = 0; sample < bufferToFill.numSamples; ++sample) {
+            //float value = m_amplitude * sin(2 * double_Pi * f * m_time + m_phase);
+            float value = sin1.nextSample(m_time);
+            float noise = whiteNoise.nextSample();
 
-                monoBuffer[sample] = value;
-                
-                // update time variables
-                m_time += m_deltaTime;
-
-                // TODO not in use
-                m_frequency += m_deltaFrequency;
-            }
-
-            m_frequency = m_targetFrequency;
+            monoBuffer[sample] = value + noise;
+            m_time += m_deltaTime;
         }
-        else {
-            // generate sin wave in mono
-            for (int sample = 0; sample < bufferToFill.numSamples; ++sample) {
-                float value = m_amplitude * sin(2 * double_Pi*f*m_time + m_phase);
-                float noise = m_noiseLevel * random.nextFloat();
 
-                monoBuffer[sample] = value + noise;
-                m_time += m_deltaTime;
-            }
-        }
 
         // iterate over all available output channels
         for (int channel = 0; channel < bufferToFill.buffer->getNumChannels(); ++channel)
@@ -203,9 +177,6 @@ public:
 
     void resized() override
     {
-        // This is called when the MainContentComponent is resized.
-        // If you add any child components, this is where you should
-        // update their positions.
         const int sliderLeft = 50;
         volumeSlider.setBounds(sliderLeft, 20, getWidth() - sliderLeft - 10, 20);
         phaseSlider.setBounds(sliderLeft, 50, getWidth() - sliderLeft - 10, 20);
@@ -217,19 +188,17 @@ public:
 
 private:
     //==============================================================================
+    SineWave sin1;
+    SineWave sin2;
+
+    WhiteNoise whiteNoise;
 
     // Your private member variables go here...
-    float m_amplitude;
-    float m_frequency;
-    float m_phase;
     float m_time;
     float m_deltaTime;
 
     float m_targetFrequency;
     float m_deltaFrequency;
-
-    float m_prevVolume;
-    float m_prevNoiseLevel;
 
     // GUI
     Slider volumeSlider;
@@ -241,7 +210,6 @@ private:
 
     // noise
     Slider noiseVolumeSlider;
-    float m_noiseLevel;
 
     TextButton m_mute;
 
