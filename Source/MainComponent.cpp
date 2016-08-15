@@ -2,33 +2,46 @@
 #define MAINCOMPONENT_H_INCLUDED
 
 #include "../JuceLibraryCode/JuceHeader.h"
-#include "juce_gui_basics\widgets\juce_Slider.h"
-#include "juce_gui_basics\widgets\juce_Label.h"
 
 #include <limits>
 #include "WhiteNoise.h"
 #include "SineWave.h"
+#include "SquareWave.h"
+#include "SawtoothWave.h"
 
 #include "OscillatorWave.h"
+#include "Keyboard.h"
 
 //==============================================================================
 /*
 This component lives inside our window, and this is where you should put all
 your controls and content.
 */
-class MainContentComponent : public AudioAppComponent
+class MainContentComponent :    public AudioAppComponent
+                                //public ComboBox::Listener
 {
 public:
     //==============================================================================
-    MainContentComponent()
+    MainContentComponent():
+        startTime(Time::getMillisecondCounterHiRes() * 0.001)
     {
         setSize(800, 600);
         setAudioChannels(2, 2);
 
         addAndMakeVisible(sineWaveOsc);
-        addAndMakeVisible(sineWaveOsc2);
+        addAndMakeVisible(squareWaveOsc);
+        addAndMakeVisible(sawWaveOsc);
+        addAndMakeVisible(triangleWaveOsc);
 
-        
+        sineWaveOsc.setWaveType(new SineWave());
+        squareWaveOsc.setWaveType(new SquareWave());
+        sawWaveOsc.setWaveType(new SawtoothWave());
+        triangleWaveOsc.setWaveType(new SquareWave());
+
+        sineWaveOsc.setTitle("Sine wave");
+        squareWaveOsc.setTitle("Square wave");
+        sawWaveOsc.setTitle("Saw wave");
+        triangleWaveOsc.setTitle("Triangle wave");
     }
 
     ~MainContentComponent()
@@ -39,14 +52,24 @@ public:
     //==============================================================================
     void prepareToPlay(int samplesPerBlockExpected, double sampleRate) override
     {
-        // This function will be called when the audio device is started, or when
-        // its settings (i.e. sample rate, block size, etc) are changed.
-        // You can use this function to initialise any resources you might need,
-        // but be careful - it will be called on the audio thread, not the GUI thread.
-        // For more details, see the help for AudioProcessor::prepareToPlay()
-
         m_time = 0.0;
         m_deltaTime = 1 / sampleRate;
+    }
+
+    void mixWaves(double t, float* monoBuffer, int numSamples) {
+        Random random;
+        // check if target frequency was changed
+
+        // generate sin wave in mono
+        for (int sample = 0; sample < numSamples; ++sample) {
+            float sine = sineWaveOsc.nextSample(m_time);
+            float square = squareWaveOsc.nextSample(m_time);
+            float saw = sawWaveOsc.nextSample(m_time);
+            float triangle = triangleWaveOsc.nextSample(m_time);
+
+            monoBuffer[sample] = sine + square + saw + triangle;
+            m_time += m_deltaTime;
+        }
     }
 
     void getNextAudioBlock(const AudioSourceChannelInfo& bufferToFill) override
@@ -56,19 +79,7 @@ public:
         }
 
         float *monoBuffer = new float[bufferToFill.numSamples];
-
-        Random random;
-        // check if target frequency was changed
-
-        // generate sin wave in mono
-        for (int sample = 0; sample < bufferToFill.numSamples; ++sample) {
-            float value = sineWaveOsc.nextSample(m_time) + sineWaveOsc2.nextSample(m_time);
-            float noise = 0.0; // whiteNoise.nextSample();
-
-            monoBuffer[sample] = value + noise;
-            m_time += m_deltaTime;
-        }
-
+        mixWaves(m_time, monoBuffer, bufferToFill.numSamples);
 
         // iterate over all available output channels
         for (int channel = 0; channel < bufferToFill.buffer->getNumChannels(); ++channel)
@@ -98,19 +109,28 @@ public:
 
     void resized() override
     {
+        Rectangle<int> area(getLocalBounds());
+
         sineWaveOsc.setBounds(0, 0, 440, 130);
-        sineWaveOsc2.setBounds(0, 130, 440, 130);
-
+        squareWaveOsc.setBounds(0, 150, 440, 130);
+        sawWaveOsc.setBounds(0, 300, 440, 130);
+        triangleWaveOsc.setBounds(0, 450, 440, 130);
     }
-
+    
 private:
     //==============================================================================
+    // oscillators
     OscillatorWave sineWaveOsc;
-    OscillatorWave sineWaveOsc2;
+    OscillatorWave squareWaveOsc;
+    OscillatorWave sawWaveOsc;
+    OscillatorWave triangleWaveOsc;
 
     // Your private member variables go here...
     float m_time;
     float m_deltaTime;
+
+    double startTime;
+
 
     JUCE_DECLARE_NON_COPYABLE_WITH_LEAK_DETECTOR(MainContentComponent)
 };

@@ -75,22 +75,29 @@ OscillatorWave::OscillatorWave ()
     label3->setColour (TextEditor::textColourId, Colours::black);
     label3->setColour (TextEditor::backgroundColourId, Colour (0x00000000));
 
+    addAndMakeVisible (title = new Label ("title",
+                                          TRANS("Sine Wave\n")));
+    title->setFont (Font (15.00f, Font::plain));
+    title->setJustificationType (Justification::centredLeft);
+    title->setEditable (false, false, false);
+    title->setColour (TextEditor::textColourId, Colours::black);
+    title->setColour (TextEditor::backgroundColourId, Colour (0x00000000));
+
+    addAndMakeVisible (mute = new ToggleButton ("mute"));
+    mute->addListener (this);
+
 
     //[UserPreSize]
     //[/UserPreSize]
 
-    setSize (440, 130);
+    setSize (440, 150);
 
 
     //[Constructor] You can add your own custom stuff here..
-    m_volume = dbToLinear(-12);
-    m_phase = 0.0;
-    m_frequency = 150.0;
-
-    sineWave.setParams(m_volume, 150.0, 0.0);
+    //m_wave->setParams(dbToLinear(-12), 150.0, 0.0);
 
     volumeSlider->setTextValueSuffix(" db");
-    volumeSlider->setValue(-12);
+    volumeSlider->setValue(-24);
     volumeSlider->setSkewFactorFromMidPoint(-36);
 
     phaseSlider->setTextValueSuffix(" ~");
@@ -113,6 +120,8 @@ OscillatorWave::~OscillatorWave()
     label2 = nullptr;
     freqSlider = nullptr;
     label3 = nullptr;
+    title = nullptr;
+    mute = nullptr;
 
 
     //[Destructor]. You can add your own custom destruction code here..
@@ -136,12 +145,14 @@ void OscillatorWave::resized()
     //[UserPreResize] Add your own custom resize code here..
     //[/UserPreResize]
 
-    volumeSlider->setBounds (100, 28 - (24 / 2), 300, 24);
-    label->setBounds (100 + -70, (28 - (24 / 2)) + 0, 60, 24);
-    phaseSlider->setBounds (100, 66 - (24 / 2), 300, 24);
-    label2->setBounds (100 + -70, (28 - (24 / 2)) + 38, 60, 24);
-    freqSlider->setBounds (100, 103 - (24 / 2), 300, 24);
-    label3->setBounds (100 + -70, (28 - (24 / 2)) + 75, 60, 24);
+    volumeSlider->setBounds (100, 44 - (24 / 2), 300, 24);
+    label->setBounds (100 + -70, (44 - (24 / 2)) + 0, 60, 24);
+    phaseSlider->setBounds (100, 82 - (24 / 2), 300, 24);
+    label2->setBounds (100 + -70, (44 - (24 / 2)) + 38, 60, 24);
+    freqSlider->setBounds (100, 119 - (24 / 2), 300, 24);
+    label3->setBounds (100 + -70, (44 - (24 / 2)) + 75, 60, 24);
+    title->setBounds (32, 8, 150, 24);
+    mute->setBounds (336, 8, 56, 24);
     //[UserResized] Add your own custom resize handling here..
     //[/UserResized]
 }
@@ -154,27 +165,46 @@ void OscillatorWave::sliderValueChanged (Slider* sliderThatWasMoved)
     if (sliderThatWasMoved == volumeSlider)
     {
         //[UserSliderCode_volumeSlider] -- add your slider handling code here..
-        m_volume = dbToLinear(volumeSlider->getValue());
-        sineWave.setAmplitude(m_volume);
+        m_wave->setAmplitude(dbToLinear(volumeSlider->getValue()));
         //[/UserSliderCode_volumeSlider]
     }
     else if (sliderThatWasMoved == phaseSlider)
     {
         //[UserSliderCode_phaseSlider] -- add your slider handling code here..
-        m_phase = phaseSlider->getValue();
-        sineWave.setPhase(m_phase);
+        m_wave->setPhase(phaseSlider->getValue());
         //[/UserSliderCode_phaseSlider]
     }
     else if (sliderThatWasMoved == freqSlider)
     {
         //[UserSliderCode_freqSlider] -- add your slider handling code here..
-        m_frequency = freqSlider->getValue();
-        sineWave.setFrequency(m_frequency);
+        m_wave->setFrequency(freqSlider->getValue());
         //[/UserSliderCode_freqSlider]
     }
 
     //[UsersliderValueChanged_Post]
     //[/UsersliderValueChanged_Post]
+}
+
+void OscillatorWave::buttonClicked (Button* buttonThatWasClicked)
+{
+    //[UserbuttonClicked_Pre]
+    //[/UserbuttonClicked_Pre]
+
+    if (buttonThatWasClicked == mute)
+    {
+        //[UserButtonCode_mute] -- add your button handler code here..
+        if (!m_wave->isMuted()) {
+            m_wave->mute();
+        }
+        else {
+            m_wave->unmute();
+        }
+        
+        //[/UserButtonCode_mute]
+    }
+
+    //[UserbuttonClicked_Post]
+    //[/UserbuttonClicked_Post]
 }
 
 
@@ -195,10 +225,10 @@ BEGIN_JUCER_METADATA
 <JUCER_COMPONENT documentType="Component" className="OscillatorWave" componentName="OscillatorWave"
                  parentClasses="public Component" constructorParams="" variableInitialisers=""
                  snapPixels="8" snapActive="1" snapShown="1" overlayOpacity="0.330"
-                 fixedSize="1" initialWidth="440" initialHeight="130">
+                 fixedSize="1" initialWidth="440" initialHeight="150">
   <BACKGROUND backgroundColour="ffffb900"/>
   <SLIDER name="volumeSlider" id="e9e0cf65aa868f37" memberName="volumeSlider"
-          virtualName="" explicitFocusOrder="0" pos="100 28c 300 24" min="-96"
+          virtualName="" explicitFocusOrder="0" pos="100 44c 300 24" min="-96"
           max="6" int="0" style="LinearHorizontal" textBoxPos="TextBoxLeft"
           textBoxEditable="1" textBoxWidth="80" textBoxHeight="20" skewFactor="1"
           needsCallback="1"/>
@@ -209,7 +239,7 @@ BEGIN_JUCER_METADATA
          focusDiscardsChanges="0" fontname="Default font" fontsize="15"
          bold="0" italic="0" justification="33"/>
   <SLIDER name="phaseSlider" id="eefdd53757b432cb" memberName="phaseSlider"
-          virtualName="" explicitFocusOrder="0" pos="100 66c 300 24" min="0"
+          virtualName="" explicitFocusOrder="0" pos="100 82c 300 24" min="0"
           max="1" int="0" style="LinearHorizontal" textBoxPos="TextBoxLeft"
           textBoxEditable="1" textBoxWidth="80" textBoxHeight="20" skewFactor="1"
           needsCallback="1"/>
@@ -220,7 +250,7 @@ BEGIN_JUCER_METADATA
          focusDiscardsChanges="0" fontname="Default font" fontsize="15"
          bold="0" italic="0" justification="33"/>
   <SLIDER name="freqSlider" id="7ea32f8768f5b911" memberName="freqSlider"
-          virtualName="" explicitFocusOrder="0" pos="100 103c 300 24" min="20"
+          virtualName="" explicitFocusOrder="0" pos="100 119c 300 24" min="20"
           max="22000" int="0" style="LinearHorizontal" textBoxPos="TextBoxLeft"
           textBoxEditable="1" textBoxWidth="80" textBoxHeight="20" skewFactor="1"
           needsCallback="1"/>
@@ -230,6 +260,14 @@ BEGIN_JUCER_METADATA
          labelText="Freq" editableSingleClick="0" editableDoubleClick="0"
          focusDiscardsChanges="0" fontname="Default font" fontsize="15"
          bold="0" italic="0" justification="33"/>
+  <LABEL name="title" id="4519e88c87a60eec" memberName="title" virtualName=""
+         explicitFocusOrder="0" pos="32 8 150 24" edTextCol="ff000000"
+         edBkgCol="0" labelText="Sine Wave&#10;" editableSingleClick="0"
+         editableDoubleClick="0" focusDiscardsChanges="0" fontname="Default font"
+         fontsize="15" bold="0" italic="0" justification="33"/>
+  <TOGGLEBUTTON name="mute" id="59064d43df4fe3dc" memberName="mute" virtualName=""
+                explicitFocusOrder="0" pos="336 8 56 24" buttonText="mute" connectedEdges="0"
+                needsCallback="1" radioGroupId="0" state="0"/>
 </JUCER_COMPONENT>
 
 END_JUCER_METADATA

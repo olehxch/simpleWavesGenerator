@@ -5,17 +5,16 @@
 #include "juce_core\maths\juce_MathsFunctions.h"
 #include "IWave.h"
 
-class WhiteNoise : public IWave
+class SquareWave : public IWave
 {
 public:
-    WhiteNoise() {};
-    ~WhiteNoise() {};
-
+    SquareWave() {};
+    ~SquareWave() {};
+    
     double sample(double t) override {
-        return m_level * random.nextDouble();
+        return m_level * 0.0;
     };
 
-private:
-    Random random;
+    int sign(double value) { return (value >= 0.0) ? 1 : -1; }
 };
 

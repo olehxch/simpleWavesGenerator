@@ -130,8 +130,6 @@
     <ClCompile Include="..\..\Source\MainComponent.cpp" />
     <ClCompile Include="..\..\Source\Main.cpp" />
     <ClCompile Include="..\..\Source\OscillatorWave.cpp" />
-    <ClCompile Include="..\..\Source\SineWave.cpp" />
-    <ClCompile Include="..\..\Source\WhiteNoise.cpp" />
     <ClCompile Include="C:\JUCE\modules\juce_audio_basics\buffers\juce_AudioDataConverters.cpp">
       <ExcludedFromBuild>true</ExcludedFromBuild>
     </ClCompile>
@@ -1702,8 +1700,13 @@
     <ClCompile Include="..\..\JuceLibraryCode\juce_video.cpp" />
   </ItemGroup>
   <ItemGroup>
+    <ClInclude Include="..\..\Source\IWave.h" />
+    <ClInclude Include="..\..\Source\Keyboard.h" />
     <ClInclude Include="..\..\Source\OscillatorWave.h" />
+    <ClInclude Include="..\..\Source\SawtoothWave.h" />
     <ClInclude Include="..\..\Source\SineWave.h" />
+    <ClInclude Include="..\..\Source\SquareWave.h" />
+    <ClInclude Include="..\..\Source\TriangleWave.h" />
     <ClInclude Include="..\..\Source\WhiteNoise.h" />
     <ClInclude Include="C:\JUCE\modules\juce_audio_basics\buffers\juce_AudioDataConverters.h" />
     <ClInclude Include="C:\JUCE\modules\juce_audio_basics\buffers\juce_AudioSampleBuffer.h" />
