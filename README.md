@@ -9,4 +9,4 @@ Current Issues:
 
 ## Screenshot of this small application
 
-![sgen](https://cloud.githubusercontent.com/assets/2100323/17632952/bc8e440e-60d3-11e6-851c-abef9c71d85e.PNG)
+![screenshot](https://cloud.githubusercontent.com/assets/2100323/17662039/6e05a7ea-62eb-11e6-92a6-8506ad337479.PNG)
