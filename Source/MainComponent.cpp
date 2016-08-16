@@ -11,6 +11,7 @@
 
 #include "OscillatorWave.h"
 #include "Keyboard.h"
+#include "WaveformViewComponent.h"
 
 //==============================================================================
 /*
@@ -42,6 +43,17 @@ public:
         squareWaveOsc.setTitle("Square wave");
         sawWaveOsc.setTitle("Saw wave");
         triangleWaveOsc.setTitle("Triangle wave");
+        
+        sineWaveOsc.muteOn();
+        squareWaveOsc.muteOff(); //off
+        sawWaveOsc.muteOn();
+        triangleWaveOsc.muteOn();
+
+        squareWaveOsc.setColor(Colours::red);
+        sawWaveOsc.setColor(Colours::green);
+        triangleWaveOsc.setColor(Colours::blue);
+
+        addAndMakeVisible(waveformView);
     }
 
     ~MainContentComponent()
@@ -53,7 +65,15 @@ public:
     void prepareToPlay(int samplesPerBlockExpected, double sampleRate) override
     {
         m_time = 0.0;
-        m_deltaTime = 1 / sampleRate;
+        m_deltaTime = 1.0 / sampleRate;
+
+        //sineWaveOsc.setBufferLen(samplesPerBlockExpected);
+        //squareWaveOsc.setBufferLen(samplesPerBlockExpected);
+        //sawWaveOsc.setBufferLen(samplesPerBlockExpected);
+        //triangleWaveOsc.setBufferLen(samplesPerBlockExpected);
+
+        //waveformView.setBufferSize(samplesPerBlockExpected);
+        monoBuffer = new float[samplesPerBlockExpected];
     }
 
     void mixWaves(double t, float* monoBuffer, int numSamples) {
@@ -78,7 +98,7 @@ public:
             m_time = 0.0;
         }
 
-        float *monoBuffer = new float[bufferToFill.numSamples];
+        //monoBuffer = new float[bufferToFill.numSamples];
         mixWaves(m_time, monoBuffer, bufferToFill.numSamples);
 
         // iterate over all available output channels
@@ -91,6 +111,8 @@ public:
                 buffer[sample] = monoBuffer[sample];
             }
         }
+
+        waveformView.fillBuffer(monoBuffer, bufferToFill.numSamples);
     }
 
     void releaseResources() override
@@ -105,6 +127,7 @@ public:
     {
         // (Our component is opaque, so we must completely fill the background with a solid colour)
         g.fillAll(Colours::white);
+        waveformView.repaint();
     }
 
     void resized() override
@@ -115,6 +138,9 @@ public:
         squareWaveOsc.setBounds(0, 150, squareWaveOsc.getBounds().getWidth(), sineWaveOsc.getBounds().getHeight());
         sawWaveOsc.setBounds(0, 300, sawWaveOsc.getBounds().getWidth(), sineWaveOsc.getBounds().getHeight());
         triangleWaveOsc.setBounds(0, 450, triangleWaveOsc.getBounds().getWidth(), sineWaveOsc.getBounds().getHeight());
+
+        // waveform view
+        waveformView.setBounds(440, 0, waveformView.getBounds().getWidth(), waveformView.getBounds().getHeight());
     }
     
 private:
@@ -125,12 +151,15 @@ private:
     OscillatorWave sawWaveOsc;
     OscillatorWave triangleWaveOsc;
 
+    WaveformViewComponent waveformView;
+
     // Your private member variables go here...
     float m_time;
     float m_deltaTime;
 
     double startTime;
 
+    float *monoBuffer;
 
     JUCE_DECLARE_NON_COPYABLE_WITH_LEAK_DETECTOR(MainContentComponent)
 };

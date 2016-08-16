@@ -7,7 +7,7 @@
 class IWave
 {
 public:
-    IWave() : m_level(0.0), m_frequency(0.0), m_phase(0.0) {};
+    IWave() : m_level(0.0), m_frequency(0.0), m_phase(0.0), bufferLen(441), sampleRate(44100.0) {};
     ~IWave() {};
 
     void setParams(double level, double freq, double phase) {
@@ -33,11 +33,16 @@ public:
     void unmute() { m_mute = false; }
     bool isMuted() { return m_mute; }
 
+    void setBufferLen(int value) { bufferLen = value; }
+    void setSampleRate(int value) { sampleRate = value; }
+
 protected:
     double m_level;
     double m_frequency;
     double m_phase;
 
+    int bufferLen;
+    double sampleRate;
     bool m_mute = false;
 
     /**

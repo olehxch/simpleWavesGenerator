@@ -130,6 +130,7 @@
     <ClCompile Include="..\..\Source\MainComponent.cpp" />
     <ClCompile Include="..\..\Source\Main.cpp" />
     <ClCompile Include="..\..\Source\OscillatorWave.cpp" />
+    <ClCompile Include="..\..\Source\WaveformViewComponent.cpp" />
     <ClCompile Include="C:\JUCE\modules\juce_audio_basics\buffers\juce_AudioDataConverters.cpp">
       <ExcludedFromBuild>true</ExcludedFromBuild>
     </ClCompile>
@@ -1707,6 +1708,7 @@
     <ClInclude Include="..\..\Source\SineWave.h" />
     <ClInclude Include="..\..\Source\SquareWave.h" />
     <ClInclude Include="..\..\Source\TriangleWave.h" />
+    <ClInclude Include="..\..\Source\WaveformViewComponent.h" />
     <ClInclude Include="..\..\Source\WhiteNoise.h" />
     <ClInclude Include="C:\JUCE\modules\juce_audio_basics\buffers\juce_AudioDataConverters.h" />
     <ClInclude Include="C:\JUCE\modules\juce_audio_basics\buffers\juce_AudioSampleBuffer.h" />

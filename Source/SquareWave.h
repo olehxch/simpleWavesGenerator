@@ -17,8 +17,31 @@ public:
         //double freqStep = 1.0 / m_frequency;
         //double halfStep = freqStep / 2.0;
         
+        
+        // harmonics
+        double sum = 0.0;
+        double level = m_level;
 
-        return m_level * sign(sin(2 * double_Pi * m_frequency * t + m_phase));
+        double step = 1.0 / sampleRate;
+        double period = step / bufferLen;
+
+        for (int i = 0; i < period; i++) {
+            sum += (1.0 /(2.0 * i + 1.0))*sin(2.0 * double_Pi*(2.0 * i + 1.0)*m_frequency*t);
+        }
+
+        /*for (int i = 0; i <= 50; i++) {
+            double freq = m_frequency * 2;
+
+            if (freq > 22000) break;
+            double value = level * sin(2 * double_Pi * freq * t + m_phase);
+
+            sum += value;
+
+            //level -= 0.02;
+        }*/
+
+        return m_level * sum;
+        //return m_level * sign(sin(2 * double_Pi * m_frequency * t + m_phase));
     };
 
     int sign(double value) { return (value >= 0.0) ? 1 : -1; }

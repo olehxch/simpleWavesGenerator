@@ -27,7 +27,8 @@
 //[/MiscUserDefs]
 
 //==============================================================================
-OscillatorWave::OscillatorWave ()
+OscillatorWave::OscillatorWave ():
+    m_color(Colours::yellow)
 {
     //[Constructor_pre] You can add your own custom stuff here..
     //[/Constructor_pre]
@@ -104,7 +105,7 @@ OscillatorWave::OscillatorWave ()
     phaseSlider->setValue(0.0);
 
     freqSlider->setTextValueSuffix(" Hz");
-    freqSlider->setValue(150);
+    freqSlider->setValue(300);
     freqSlider->setSkewFactorFromMidPoint(500.0);
     //[/Constructor]
 }
@@ -128,13 +129,14 @@ OscillatorWave::~OscillatorWave()
     //[/Destructor]
 }
 
+
 //==============================================================================
 void OscillatorWave::paint (Graphics& g)
 {
     //[UserPrePaint] Add your own custom painting code here..
     //[/UserPrePaint]
 
-    g.fillAll (Colour (0xffffb900));
+    g.fillAll (m_color);
 
     //[UserPaint] Add your own custom painting code here..
     //[/UserPaint]

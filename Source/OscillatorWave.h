@@ -58,6 +58,13 @@ public:
     double nextSample(double t) { return m_wave->nextSample(t); }
 
     void setTitle(String t) { title->setText(t, dontSendNotification); }
+
+    void muteOn() { this->mute->setToggleState(true, dontSendNotification); m_wave->mute(); };
+    void muteOff() { this->mute->setToggleState(false, dontSendNotification); m_wave->unmute(); }
+
+    void setColor(Colour color) { this->m_color = color; }
+
+    void setBufferLen(int value) { m_wave->setBufferLen(value); }
     //[/UserMethods]
 
     void paint (Graphics& g) override;
@@ -69,10 +76,7 @@ private:
     //[UserVariables]   -- You can add your own custom variables in this section.
     IWave* m_wave;
 
-    //double m_volume;
-    //double m_phase;
-    //double m_frequency;
-
+    Colour m_color;
     double dbToLinear(double value) { return pow(10.0, value / 20.0); }
     //[/UserVariables]
 
