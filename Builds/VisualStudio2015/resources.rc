@@ -13,9 +13,9 @@ BEGIN
   BEGIN
     BLOCK "040904E4"
     BEGIN
-      VALUE "FileDescription",  "Simple Sine Wave Generator 2\0"
+      VALUE "FileDescription",  "Simple Waves Generator\0"
       VALUE "FileVersion",  "2.0.0\0"
-      VALUE "ProductName",  "Simple Sine Wave Generator 2\0"
+      VALUE "ProductName",  "Simple Waves Generator\0"
       VALUE "ProductVersion",  "2.0.0\0"
     END
   END

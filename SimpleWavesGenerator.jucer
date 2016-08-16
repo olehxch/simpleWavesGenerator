@@ -1,10 +1,30 @@
 <?xml version="1.0" encoding="UTF-8"?>
 
-<JUCERPROJECT id="lIYkGK" name="Simple Sine Wave Generator 2" projectType="guiapp"
-              version="2.0.0" bundleIdentifier="com.olehch.SynthTutorialPartOne"
+<JUCERPROJECT id="lIYkGK" name="Simple Waves Generator" projectType="guiapp"
+              version="2.0.0" bundleIdentifier="com.olehch.Simple Waves Generator"
               includeBinaryInAppConfig="1" jucerVersion="4.2.3">
-  <MAINGROUP id="OCw9TR" name="Simple Sine Wave Generator 2">
+  <MAINGROUP id="OCw9TR" name="Simple Waves Generator">
     <GROUP id="{FBCDB180-C624-5FF1-D6AD-FE3994D48F8B}" name="Source">
+      <FILE id="cagqp9" name="IWave.h" compile="0" resource="0" file="Source/IWave.h"/>
+      <FILE id="umJ2JX" name="Keyboard.h" compile="0" resource="0" file="Source/Keyboard.h"/>
+      <FILE id="Y1puZQ" name="SawtoothWave.h" compile="0" resource="0" file="Source/SawtoothWave.h"/>
+      <FILE id="ENflH0" name="SineWave.cpp" compile="1" resource="0" file="Source/SineWave.cpp"/>
+      <FILE id="U79TP5" name="SineWave.h" compile="0" resource="0" file="Source/SineWave.h"/>
+      <FILE id="cgkohR" name="SpectralViewComponent.cpp" compile="1" resource="0"
+            file="Source/SpectralViewComponent.cpp"/>
+      <FILE id="WaASzY" name="SpectralViewComponent.h" compile="0" resource="0"
+            file="Source/SpectralViewComponent.h"/>
+      <FILE id="fuTjCE" name="SquareWave.h" compile="0" resource="0" file="Source/SquareWave.h"/>
+      <FILE id="bZjDTt" name="TriangleWave.h" compile="0" resource="0" file="Source/TriangleWave.h"/>
+      <FILE id="Mjkx2F" name="WaveformViewComponent.cpp" compile="1" resource="0"
+            file="Source/WaveformViewComponent.cpp"/>
+      <FILE id="t5mZk4" name="WaveformViewComponent.h" compile="0" resource="0"
+            file="Source/WaveformViewComponent.h"/>
+      <FILE id="UVftte" name="WhiteNoise.h" compile="0" resource="0" file="Source/WhiteNoise.h"/>
+      <FILE id="Rg5aeH" name="OscillatorWave.cpp" compile="1" resource="0"
+            file="Source/OscillatorWave.cpp"/>
+      <FILE id="NGPaVF" name="OscillatorWave.h" compile="0" resource="0"
+            file="Source/OscillatorWave.h"/>
       <FILE id="GaLSBX" name="MainComponent.cpp" compile="1" resource="0"
             file="Source/MainComponent.cpp"/>
       <FILE id="zC5jsu" name="Main.cpp" compile="1" resource="0" file="Source/Main.cpp"/>
@@ -14,9 +34,9 @@
     <VS2015 targetFolder="Builds/VisualStudio2015">
       <CONFIGURATIONS>
         <CONFIGURATION name="Debug" winWarningLevel="4" generateManifest="1" winArchitecture="32-bit"
-                       isDebug="1" optimisation="1" targetName="SimpleSineWaveGenerator"/>
+                       isDebug="1" optimisation="1" targetName="Simple Waves Generator"/>
         <CONFIGURATION name="Release" winWarningLevel="4" generateManifest="1" winArchitecture="32-bit"
-                       isDebug="0" optimisation="3" targetName="SimpleSineWaveGenerator"/>
+                       isDebug="0" optimisation="3" targetName="Simple Waves Generator"/>
       </CONFIGURATIONS>
       <MODULEPATHS>
         <MODULEPATH id="juce_core" path="C:/JUCE/modules"/>
@@ -53,4 +73,7 @@
     <MODULE id="juce_video" showAllCode="1" useLocalCopy="0"/>
   </MODULES>
   <JUCEOPTIONS/>
+  <LIVE_SETTINGS>
+    <WINDOWS/>
+  </LIVE_SETTINGS>
 </JUCERPROJECT>

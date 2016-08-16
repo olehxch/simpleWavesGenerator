@@ -12,6 +12,7 @@
 #include "OscillatorWave.h"
 #include "Keyboard.h"
 #include "WaveformViewComponent.h"
+#include "SpectralViewComponent.h"
 
 //==============================================================================
 /*
@@ -44,16 +45,17 @@ public:
         sawWaveOsc.setTitle("Saw wave");
         triangleWaveOsc.setTitle("Triangle wave");
         
-        sineWaveOsc.muteOn();
-        squareWaveOsc.muteOff(); //off
-        sawWaveOsc.muteOn();
-        triangleWaveOsc.muteOn();
+        sineWaveOsc.muteOff();
+        squareWaveOsc.muteOn(); // TODO implement
+        sawWaveOsc.muteOn(); // TODO implement
+        triangleWaveOsc.muteOn(); // TODO implement
 
         squareWaveOsc.setColor(Colours::red);
         sawWaveOsc.setColor(Colours::green);
         triangleWaveOsc.setColor(Colours::blue);
 
         addAndMakeVisible(waveformView);
+        addAndMakeVisible(spectralView);
     }
 
     ~MainContentComponent()
@@ -73,6 +75,7 @@ public:
         //triangleWaveOsc.setBufferLen(samplesPerBlockExpected);
 
         //waveformView.setBufferSize(samplesPerBlockExpected);
+        this->m_samplesPerBlockExpected = samplesPerBlockExpected;
         monoBuffer = new float[samplesPerBlockExpected];
     }
 
@@ -113,6 +116,7 @@ public:
         }
 
         waveformView.fillBuffer(monoBuffer, bufferToFill.numSamples);
+        spectralView.fillBuffer(monoBuffer, bufferToFill.numSamples);
     }
 
     void releaseResources() override
@@ -128,6 +132,7 @@ public:
         // (Our component is opaque, so we must completely fill the background with a solid colour)
         g.fillAll(Colours::white);
         waveformView.repaint();
+        spectralView.repaint();
     }
 
     void resized() override
@@ -141,6 +146,7 @@ public:
 
         // waveform view
         waveformView.setBounds(440, 0, waveformView.getBounds().getWidth(), waveformView.getBounds().getHeight());
+        spectralView.setBounds(440, 300, spectralView.getBounds().getWidth(), spectralView.getBounds().getHeight());
     }
     
 private:
@@ -152,6 +158,7 @@ private:
     OscillatorWave triangleWaveOsc;
 
     WaveformViewComponent waveformView;
+    SpectralViewComponent spectralView;
 
     // Your private member variables go here...
     float m_time;
@@ -160,6 +167,7 @@ private:
     double startTime;
 
     float *monoBuffer;
+    int m_samplesPerBlockExpected;
 
     JUCE_DECLARE_NON_COPYABLE_WITH_LEAK_DETECTOR(MainContentComponent)
 };

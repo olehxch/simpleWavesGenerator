@@ -15,6 +15,5 @@ public:
         return m_level * sin(2 * double_Pi * m_frequency * t + m_phase);
     };
 
-private:
 };
 
