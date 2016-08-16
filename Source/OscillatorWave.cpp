@@ -197,7 +197,7 @@ void OscillatorWave::buttonClicked (Button* buttonThatWasClicked)
             m_wave->mute();
         }
         else {
-            m_wave->unmute();
+            m_wave->unmute(); 
         }
         
         //[/UserButtonCode_mute]

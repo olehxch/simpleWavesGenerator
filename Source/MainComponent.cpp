@@ -110,11 +110,11 @@ public:
     void resized() override
     {
         Rectangle<int> area(getLocalBounds());
-
-        sineWaveOsc.setBounds(0, 0, 440, 130);
-        squareWaveOsc.setBounds(0, 150, 440, 130);
-        sawWaveOsc.setBounds(0, 300, 440, 130);
-        triangleWaveOsc.setBounds(0, 450, 440, 130);
+        
+        sineWaveOsc.setBounds(0, 0, sineWaveOsc.getBounds().getWidth(), sineWaveOsc.getBounds().getHeight());
+        squareWaveOsc.setBounds(0, 150, squareWaveOsc.getBounds().getWidth(), sineWaveOsc.getBounds().getHeight());
+        sawWaveOsc.setBounds(0, 300, sawWaveOsc.getBounds().getWidth(), sineWaveOsc.getBounds().getHeight());
+        triangleWaveOsc.setBounds(0, 450, triangleWaveOsc.getBounds().getWidth(), sineWaveOsc.getBounds().getHeight());
     }
     
 private:
