@@ -21,8 +21,8 @@ void SpectralViewComponent::paint(Graphics& g) {
     g.drawLine(0, 0, m_width, 0);
     g.drawText("Spectral View", 0, 5, m_width, 10, Justification::centred);
 
-    g.setColour(Colour::fromRGB(0x2B, 0x2C, 0x43));
     if (!m_locked) {
+        g.setColour(Colour::fromRGB(0x2B, 0x2C, 0x43)); // set line color
         std::vector<Line<float> > copyLines(lines);
         for (auto line : copyLines) {
             g.drawLine(line, 2.8);
@@ -38,30 +38,29 @@ void SpectralViewComponent::resized() {
 void SpectralViewComponent::fillBuffer(float *buffer, int len) {
     m_locked = true;
 
-    float* buf2 = new float[512] { 0 };
-    memcpy(buf2, buffer, len);
+    const int fftBufferSize = juce::nextPowerOfTwo(len);
+    int powerOfTwo = log(fftBufferSize) / log(2);
+    int halfBuffer = fftBufferSize / 2;
 
-    FFT fft(8, false); // 256
-    fft.performFrequencyOnlyForwardTransform(buf2);
+    float* fftBuffer = new float[fftBufferSize] { 0 };
+    memcpy(fftBuffer, buffer, len);
+
+    FFT fft(powerOfTwo - 1, false);
+    fft.performFrequencyOnlyForwardTransform(fftBuffer);
     lines.clear();
-
-    float maxelem = findmax(buf2, 512);
     
     float pos = 0;
-    int width = getBounds().getWidth();
-    int height = getBounds().getHeight();
-
-    float scale = height / maxelem;
-    float step = width / 128.0;
-    for (int i = 0; i < 128; i++) {
-        float cur = buf2[i] * scale;
+    float scale = m_height / findmax(fftBuffer, 512);
+    float step = m_width / 128.0;
+    for (int i = 0; i < halfBuffer; i++) {
+        float cur = fftBuffer[i] * scale;
 
         // check if cur is NaN
         if (cur != cur) cur = 0.0;
 
         Line<float> l;
-        l.setStart(pos, height);
-        l.setEnd(pos, height - cur);
+        l.setStart(pos, m_height);
+        l.setEnd(pos, m_height - cur);
 
         lines.push_back(l);
 
@@ -81,4 +80,5 @@ float SpectralViewComponent::findmax(float * buf, int len)
 
     return max;
 }
+
 

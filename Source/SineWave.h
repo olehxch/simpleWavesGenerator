@@ -1,9 +1,7 @@
 #pragma once
 
-#include <math.h>
 #include "IWave.h"
 #include "../JuceLibraryCode/JuceHeader.h"
-#include "juce_core\maths\juce_MathsFunctions.h"
 
 class SineWave : public IWave
 {
@@ -12,7 +10,7 @@ public:
     ~SineWave() {};
 
     double sample(double t, int len) override {
-        return m_level * sin(2 * double_Pi * m_frequency * t + m_phase);
+        return level * sin(2 * double_Pi * frequency * t + phase);
     };
 
 };

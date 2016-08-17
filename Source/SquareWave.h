@@ -1,8 +1,6 @@
 #pragma once
 
-#include <math.h>
 #include "../JuceLibraryCode/JuceHeader.h"
-#include "juce_core\maths\juce_MathsFunctions.h"
 #include "IWave.h"
 
 class SquareWave : public IWave
@@ -12,12 +10,12 @@ public:
     ~SquareWave() {};
     
     double sample(double t, int len) override {      
-        return m_level * sampleByTime(t);
-        //return m_level * sampleBySinSign(t);
+        return level * sampleByTime(t);
+        //return level * sampleBySinSign(t);
     };
 
     double sampleByTime(double t) {
-        double fullPeriodTime = 1.0 / m_frequency;
+        double fullPeriodTime = 1.0 / frequency;
         double halfPeriodTime = fullPeriodTime / 2.0;
         double localTime = fmod(t, fullPeriodTime);
 
@@ -26,7 +24,7 @@ public:
     }
 
     double sampleBySinSign(double t) {
-        return sign(sin(2 * double_Pi * m_frequency * t + m_phase));
+        return sign(sin(2 * double_Pi * frequency * t + phase));
     }
 
     int sign(double value) { return (value >= 0.0) ? 1 : -1; }

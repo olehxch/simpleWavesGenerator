@@ -22,8 +22,7 @@
 
 //[Headers]     -- You can add your own extra header files here --
 #include "../JuceLibraryCode/JuceHeader.h"
-#include "SineWave.h"
-#include "SquareWave.h"
+#include "IWave.h"
 //[/Headers]
 
 
@@ -47,24 +46,20 @@ public:
 
     //==============================================================================
     //[UserMethods]     -- You can add your own custom methods in this section.
-    void setWaveType(IWave *wave) {
-        m_wave = wave;
-    }
+    void setWaveType(IWave *iwave) { this->wave = iwave; }
 
-    double getVolume() { return m_wave->getAmplitude(); }
-    double getPhase() { return m_wave->getPhase(); }
-    double getFrequency() { return m_wave->getFrequency(); }
+    double getVolume() { return wave->getAmplitude(); }
+    double getPhase() { return wave->getPhase(); }
+    double getFrequency() { return wave->getFrequency(); }
 
-    double nextSample(double t, int len) { return m_wave->nextSample(t, len); }
+    double nextSample(double t, int len) { return wave->nextSample(t, len); }
+
+    void muteOn() { this->mute->setToggleState(true, dontSendNotification); wave->muteOn(); };
+    void muteOff() { this->mute->setToggleState(false, dontSendNotification); wave->muteOff(); }
 
     void setTitle(String t) { title->setText(t, dontSendNotification); }
-
-    void muteOn() { this->mute->setToggleState(true, dontSendNotification); m_wave->mute(); };
-    void muteOff() { this->mute->setToggleState(false, dontSendNotification); m_wave->unmute(); }
-
     void setColor(Colour color) { this->m_color = color; }
 
-    void setBufferLen(int value) { m_wave->setBufferLen(value); }
     //[/UserMethods]
 
     void paint (Graphics& g) override;
@@ -72,11 +67,9 @@ public:
     void sliderValueChanged (Slider* sliderThatWasMoved) override;
     void buttonClicked (Button* buttonThatWasClicked) override;
 
-
-
 private:
     //[UserVariables]   -- You can add your own custom variables in this section.
-    IWave* m_wave;
+    IWave* wave;
 
     Colour m_color;
     double dbToLinear(double value) { return pow(10.0, value / 20.0); }

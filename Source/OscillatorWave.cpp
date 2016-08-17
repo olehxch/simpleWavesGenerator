@@ -94,8 +94,6 @@ OscillatorWave::OscillatorWave ()
 
 
     //[Constructor] You can add your own custom stuff here..
-    //m_wave->setParams(dbToLinear(-12), 150.0, 0.0);
-
     volumeSlider->setTextValueSuffix(" db");
     volumeSlider->setValue(-24);
     volumeSlider->setSkewFactorFromMidPoint(-36);
@@ -166,19 +164,19 @@ void OscillatorWave::sliderValueChanged (Slider* sliderThatWasMoved)
     if (sliderThatWasMoved == volumeSlider)
     {
         //[UserSliderCode_volumeSlider] -- add your slider handling code here..
-        m_wave->setAmplitude(dbToLinear(volumeSlider->getValue()));
+        wave->setAmplitude(dbToLinear(volumeSlider->getValue()));
         //[/UserSliderCode_volumeSlider]
     }
     else if (sliderThatWasMoved == phaseSlider)
     {
         //[UserSliderCode_phaseSlider] -- add your slider handling code here..
-        m_wave->setPhase(phaseSlider->getValue());
+        wave->setPhase(phaseSlider->getValue());
         //[/UserSliderCode_phaseSlider]
     }
     else if (sliderThatWasMoved == freqSlider)
     {
         //[UserSliderCode_freqSlider] -- add your slider handling code here..
-        m_wave->setFrequency(freqSlider->getValue());
+        wave->setFrequency(freqSlider->getValue());
         //[/UserSliderCode_freqSlider]
     }
 
@@ -194,13 +192,11 @@ void OscillatorWave::buttonClicked (Button* buttonThatWasClicked)
     if (buttonThatWasClicked == mute)
     {
         //[UserButtonCode_mute] -- add your button handler code here..
-        if (!m_wave->isMuted()) {
-            m_wave->mute();
+        if (!wave->isMuted()) { 
+            wave->muteOn(); 
+        } else { 
+            wave->muteOff();
         }
-        else {
-            m_wave->unmute();
-        }
-
         //[/UserButtonCode_mute]
     }
 

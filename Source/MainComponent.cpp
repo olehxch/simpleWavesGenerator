@@ -11,7 +11,6 @@
 #include "TriangleWave.h"
 
 #include "OscillatorWave.h"
-#include "Keyboard.h"
 #include "WaveformViewComponent.h"
 #include "SpectralViewComponent.h"
 
@@ -21,20 +20,13 @@ This component lives inside our window, and this is where you should put all
 your controls and content.
 */
 class MainContentComponent :    public AudioAppComponent
-                                //public ComboBox::Listener
 {
 public:
     //==============================================================================
-    MainContentComponent():
-        startTime(Time::getMillisecondCounterHiRes() * 0.001)
+    MainContentComponent()
     {
         setSize(800, 600);
         setAudioChannels(2, 2);
-
-        addAndMakeVisible(sineWaveOsc);
-        addAndMakeVisible(squareWaveOsc);
-        addAndMakeVisible(sawWaveOsc);
-        addAndMakeVisible(triangleWaveOsc);
 
         sineWaveOsc.setWaveType(new SineWave());
         squareWaveOsc.setWaveType(new SquareWave());
@@ -47,18 +39,24 @@ public:
         triangleWaveOsc.setTitle("Triangle wave");
         
         sineWaveOsc.muteOn();
-        squareWaveOsc.muteOn(); // TODO implement
-        sawWaveOsc.muteOn(); // TODO implement
-        triangleWaveOsc.muteOn(); // TODO implement
+        squareWaveOsc.muteOn();
+        sawWaveOsc.muteOn();
+        triangleWaveOsc.muteOn();
 
-        sineWaveOsc.setColor(Colour::fromRGB(0x4E, 0x99, 0xFE) ); // #4E99FE
-        squareWaveOsc.setColor(Colour::fromRGB(0xCC, 0x3B, 0xFA) ); // #CC3BFA
-        sawWaveOsc.setColor(Colour::fromRGB(0xFC, 0xFE, 0x31) ); // #FCFE41
-        triangleWaveOsc.setColor(Colour::fromRGB(0x37, 0xDD, 0x77) ); // #37DD77
-        // background color #F1F0FE
+        sineWaveOsc.setColor(Colour::fromRGB(0x4E, 0x99, 0xFE) );
+        squareWaveOsc.setColor(Colour::fromRGB(0xCC, 0x3B, 0xFA) );
+        sawWaveOsc.setColor(Colour::fromRGB(0xFC, 0xFE, 0x31) );
+        triangleWaveOsc.setColor(Colour::fromRGB(0x37, 0xDD, 0x77) );
 
         addAndMakeVisible(waveformView);
         addAndMakeVisible(spectralView);
+
+        addAndMakeVisible(sineWaveOsc);
+        addAndMakeVisible(squareWaveOsc);
+        addAndMakeVisible(sawWaveOsc);
+        addAndMakeVisible(triangleWaveOsc);
+
+        m_isInitialized = true;
     }
 
     ~MainContentComponent()
@@ -71,20 +69,11 @@ public:
     {
         m_time = 0.0;
         m_deltaTime = 1.0 / sampleRate;
-
-        //sineWaveOsc.setBufferLen(samplesPerBlockExpected);
-        //squareWaveOsc.setBufferLen(samplesPerBlockExpected);
-        //sawWaveOsc.setBufferLen(samplesPerBlockExpected);
-        //triangleWaveOsc.setBufferLen(samplesPerBlockExpected);
-
-        //waveformView.setBufferSize(samplesPerBlockExpected);
-        this->m_samplesPerBlockExpected = samplesPerBlockExpected;
         monoBuffer = new float[samplesPerBlockExpected] {0};
     }
 
     void mixWaves(double t, float* monoBuffer, int numSamples) {
         Random random;
-        // check if target frequency was changed
 
         // generate sin wave in mono
         for (int sample = 0; sample < numSamples; ++sample) {
@@ -104,10 +93,7 @@ public:
             m_time = 0.0;
         }
 
-        //monoBuffer = new float[bufferToFill.numSamples];
-        // clear buffer
-        std::fill(monoBuffer, monoBuffer + m_samplesPerBlockExpected, 0);
-
+        std::fill(monoBuffer, monoBuffer + bufferToFill.numSamples, 0);
         mixWaves(m_time, monoBuffer, bufferToFill.numSamples);
 
         // iterate over all available output channels
@@ -121,8 +107,9 @@ public:
             }
         }
 
+        // update waveform and spectral views
         waveformView.fillBuffer(monoBuffer, bufferToFill.numSamples);
-        spectralView.fillBuffer(monoBuffer, bufferToFill.numSamples);
+        spectralView.fillBuffer(monoBuffer, bufferToFill.numSamples);    
     }
 
     void releaseResources() override
@@ -169,11 +156,9 @@ private:
     // Your private member variables go here...
     float m_time;
     float m_deltaTime;
-
-    double startTime;
-
     float *monoBuffer;
-    int m_samplesPerBlockExpected;
+
+    bool m_isInitialized = false;
 
     JUCE_DECLARE_NON_COPYABLE_WITH_LEAK_DETECTOR(MainContentComponent)
 };

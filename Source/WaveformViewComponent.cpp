@@ -12,7 +12,6 @@ WaveformViewComponent::WaveformViewComponent() {
 };
 
 WaveformViewComponent::~WaveformViewComponent() {
-    
 };
 
 void WaveformViewComponent::paint(Graphics& g) {
@@ -36,18 +35,6 @@ void WaveformViewComponent::resized() {
     repaint();
 }
 
-void WaveformViewComponent::thumbnailChanged() {
-    repaint();
-}
-
-void WaveformViewComponent::transportSourceChanged() {
-}
-
-void WaveformViewComponent::changeListenerCallback(ChangeBroadcaster * source) {
-    //if (source == &m_source) transportSourceChanged();
-    //if (source == &thumbnail) thumbnailChanged();
-}
-
 void WaveformViewComponent::fillBuffer(float *buffer, int len) {
     m_locked = true;
     lines.clear();
@@ -66,8 +53,3 @@ void WaveformViewComponent::fillBuffer(float *buffer, int len) {
 
     m_locked = false;
 }
-
-void WaveformViewComponent::setBufferSize(unsigned int len) {
-    //lines.resize(len);
-}
-
