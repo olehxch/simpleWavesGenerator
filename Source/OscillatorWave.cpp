@@ -27,8 +27,7 @@
 //[/MiscUserDefs]
 
 //==============================================================================
-OscillatorWave::OscillatorWave ():
-    m_color(Colours::yellow)
+OscillatorWave::OscillatorWave ()
 {
     //[Constructor_pre] You can add your own custom stuff here..
     //[/Constructor_pre]
@@ -129,16 +128,16 @@ OscillatorWave::~OscillatorWave()
     //[/Destructor]
 }
 
-
 //==============================================================================
 void OscillatorWave::paint (Graphics& g)
 {
     //[UserPrePaint] Add your own custom painting code here..
     //[/UserPrePaint]
 
-    g.fillAll (m_color);
+    g.fillAll (Colour (0xfffeb800));
 
     //[UserPaint] Add your own custom painting code here..
+    g.fillAll(m_color);
     //[/UserPaint]
 }
 
@@ -199,9 +198,9 @@ void OscillatorWave::buttonClicked (Button* buttonThatWasClicked)
             m_wave->mute();
         }
         else {
-            m_wave->unmute(); 
+            m_wave->unmute();
         }
-        
+
         //[/UserButtonCode_mute]
     }
 
@@ -228,7 +227,7 @@ BEGIN_JUCER_METADATA
                  parentClasses="public Component" constructorParams="" variableInitialisers=""
                  snapPixels="8" snapActive="1" snapShown="1" overlayOpacity="0.330"
                  fixedSize="1" initialWidth="440" initialHeight="150">
-  <BACKGROUND backgroundColour="ffffb900"/>
+  <BACKGROUND backgroundColour="fffeb800"/>
   <SLIDER name="volumeSlider" id="e9e0cf65aa868f37" memberName="volumeSlider"
           virtualName="" explicitFocusOrder="0" pos="100 44c 300 24" min="-96"
           max="6" int="0" style="LinearHorizontal" textBoxPos="TextBoxLeft"

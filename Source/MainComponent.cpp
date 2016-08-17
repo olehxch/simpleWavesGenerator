@@ -50,9 +50,11 @@ public:
         sawWaveOsc.muteOn(); // TODO implement
         triangleWaveOsc.muteOn(); // TODO implement
 
-        squareWaveOsc.setColor(Colours::red);
-        sawWaveOsc.setColor(Colours::green);
-        triangleWaveOsc.setColor(Colours::blue);
+        sineWaveOsc.setColor(Colour::fromRGB(0x4E, 0x99, 0xFE) ); // #4E99FE
+        squareWaveOsc.setColor(Colour::fromRGB(0xCC, 0x3B, 0xFA) ); // #CC3BFA
+        sawWaveOsc.setColor(Colour::fromRGB(0xFC, 0xFE, 0x31) ); // #FCFE41
+        triangleWaveOsc.setColor(Colour::fromRGB(0x37, 0xDD, 0x77) ); // #37DD77
+        // background color #F1F0FE
 
         addAndMakeVisible(waveformView);
         addAndMakeVisible(spectralView);

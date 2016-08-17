@@ -21,5 +21,8 @@ private:
     bool m_locked = true;
 
     float findmax(float* buf, int len);
+
+    int m_width;
+    int m_height;
 };
 

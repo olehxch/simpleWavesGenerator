@@ -6,6 +6,9 @@
 SpectralViewComponent::SpectralViewComponent() {
     setSize(360, 300);
     lines.resize(512);
+
+    m_width = getBounds().getWidth();
+    m_height = getBounds().getHeight();
 };
 
 SpectralViewComponent::~SpectralViewComponent() {
@@ -13,11 +16,15 @@ SpectralViewComponent::~SpectralViewComponent() {
 };
 
 void SpectralViewComponent::paint(Graphics& g) {
-    g.fillAll(Colours::white);
+    g.fillAll(Colour::fromRGB(0xF1, 0xF0, 0xFE) ); // #F1F0FE
 
+    g.drawLine(0, 0, m_width, 0);
+    g.drawText("Spectral View", 0, 5, m_width, 10, Justification::centred);
+
+    g.setColour(Colour::fromRGB(0x2B, 0x2C, 0x43));
     if (!m_locked) {
         std::vector<Line<float> > copyLines(lines);
-        for (auto line : copyLines) {            
+        for (auto line : copyLines) {
             g.drawLine(line, 2.8);
         }
     }

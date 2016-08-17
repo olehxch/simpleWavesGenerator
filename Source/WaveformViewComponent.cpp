@@ -6,6 +6,9 @@
 WaveformViewComponent::WaveformViewComponent() {
     setSize(360, 300);
     lines.resize(512);
+
+    m_width = getBounds().getWidth();
+    m_height = getBounds().getHeight();
 };
 
 WaveformViewComponent::~WaveformViewComponent() {
@@ -13,8 +16,14 @@ WaveformViewComponent::~WaveformViewComponent() {
 };
 
 void WaveformViewComponent::paint(Graphics& g) {
-    g.fillAll(Colours::lightskyblue);
+    g.fillAll(Colour::fromRGB(0xF1, 0xF0, 0xFE));
 
+    //g.drawRect(0, 0, m_width, m_height, 1.0);
+    g.drawLine(0, m_height, m_width, m_height);
+    g.drawText("Oscilloscope", 0, 5, m_width, 10, Justification::centred);
+
+
+    g.setColour(Colour::fromRGB(0x2B, 0x2C, 0x43)); // #2B2C43
     if (!m_locked) {
         std::vector<Line<float> > copyLines(lines);
         for (auto line : copyLines) {

@@ -72,6 +72,8 @@ public:
     void sliderValueChanged (Slider* sliderThatWasMoved) override;
     void buttonClicked (Button* buttonThatWasClicked) override;
 
+
+
 private:
     //[UserVariables]   -- You can add your own custom variables in this section.
     IWave* m_wave;

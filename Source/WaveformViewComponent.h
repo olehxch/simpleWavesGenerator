@@ -25,5 +25,7 @@ private:
 
     // prevents drawing when buffer is updating with new data
     bool m_locked = true;
+    int m_width;
+    int m_height;
 };
 
