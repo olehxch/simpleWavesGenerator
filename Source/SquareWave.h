@@ -11,37 +11,23 @@ public:
     SquareWave() {};
     ~SquareWave() {};
     
-    double sample(double t) override {
-        //double step = 1.0 / 44100;
-
-        //double freqStep = 1.0 / m_frequency;
-        //double halfStep = freqStep / 2.0;
-        
-        
-        // harmonics
-        double sum = 0.0;
-        double level = m_level;
-
-        double step = 1.0 / sampleRate;
-        double period = step / bufferLen;
-
-        for (int n = 0; n < period; n++) {
-            sum += sin(2.0 * double_Pi*(2.0 * n + 1.0)*m_frequency*t) / (2.0 * n + 1.0);
-        }
-
-        /*for (int i = 0; i <= 100; i++) {
-            double freq = m_frequency * 2;
-
-            double value = sin(2 * double_Pi * freq * t + m_phase);
-
-            sum += value;
-
-            //level -= 0.02;
-        }*/
-
-        return m_level * sum;
-        //return m_level * sign(sin(2 * double_Pi * m_frequency * t + m_phase));
+    double sample(double t, int len) override {      
+        return m_level * sampleByTime(t);
+        //return m_level * sampleBySinSign(t);
     };
+
+    double sampleByTime(double t) {
+        double fullPeriodTime = 1.0 / m_frequency;
+        double halfPeriodTime = fullPeriodTime / 2.0;
+        double localTime = fmod(t, fullPeriodTime);
+
+        if (localTime < halfPeriodTime) return 1.0;
+        else return -1.0;
+    }
+
+    double sampleBySinSign(double t) {
+        return sign(sin(2 * double_Pi * m_frequency * t + m_phase));
+    }
 
     int sign(double value) { return (value >= 0.0) ? 1 : -1; }
 };

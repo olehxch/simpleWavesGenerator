@@ -8,6 +8,7 @@
 #include "SineWave.h"
 #include "SquareWave.h"
 #include "SawtoothWave.h"
+#include "TriangleWave.h"
 
 #include "OscillatorWave.h"
 #include "Keyboard.h"
@@ -38,14 +39,14 @@ public:
         sineWaveOsc.setWaveType(new SineWave());
         squareWaveOsc.setWaveType(new SquareWave());
         sawWaveOsc.setWaveType(new SawtoothWave());
-        triangleWaveOsc.setWaveType(new SquareWave());
+        triangleWaveOsc.setWaveType(new TriangleWave());
 
         sineWaveOsc.setTitle("Sine wave");
         squareWaveOsc.setTitle("Square wave");
         sawWaveOsc.setTitle("Saw wave");
         triangleWaveOsc.setTitle("Triangle wave");
         
-        sineWaveOsc.muteOff();
+        sineWaveOsc.muteOn();
         squareWaveOsc.muteOn(); // TODO implement
         sawWaveOsc.muteOn(); // TODO implement
         triangleWaveOsc.muteOn(); // TODO implement
@@ -87,10 +88,10 @@ public:
 
         // generate sin wave in mono
         for (int sample = 0; sample < numSamples; ++sample) {
-            float sine = sineWaveOsc.nextSample(m_time);
-            float square = squareWaveOsc.nextSample(m_time);
-            float saw = sawWaveOsc.nextSample(m_time);
-            float triangle = triangleWaveOsc.nextSample(m_time);
+            float sine = sineWaveOsc.nextSample(m_time, numSamples);
+            float square = squareWaveOsc.nextSample(m_time, numSamples);
+            float saw = sawWaveOsc.nextSample(m_time, numSamples);
+            float triangle = triangleWaveOsc.nextSample(m_time, numSamples);
 
             monoBuffer[sample] = sine + square + saw + triangle;
             m_time += m_deltaTime;

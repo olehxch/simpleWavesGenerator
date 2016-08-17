@@ -11,10 +11,19 @@ public:
     SawtoothWave() {};
     ~SawtoothWave() {};
     
-    double sample(double t) {
-        return m_level * 0.0;
+    double sample(double t, int len) {
+        return m_level * sampleByTime(t);
     };
 
-    int sign(double value) { return (value >= 0.0) ? 1 : -1; }
+    double sampleByTime(double t) {
+        double fullPeriodTime = 1.0 / m_frequency;
+        double halfPeriodTime = fullPeriodTime / 2.0;
+        double localTime = fmod(t, fullPeriodTime);
+
+        double value = localTime / fullPeriodTime;
+
+        return value * 2 - 1.0;
+    }
+
 };
 

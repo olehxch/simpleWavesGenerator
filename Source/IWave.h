@@ -16,9 +16,9 @@ public:
         m_phase = phase;
     };
 
-    double nextSample(double t) {
+    double nextSample(double t, int len) {
         if (m_mute) return 0.0;
-        return sample(t);
+        return sample(t, len);
     };
 
     void setAmplitude(double value) { m_level = value; };
@@ -36,6 +36,10 @@ public:
     void setBufferLen(int value) { bufferLen = value; }
     void setSampleRate(int value) { sampleRate = value; }
 
+    
+    void localTime(double t) {
+
+    }
 protected:
     double m_level;
     double m_frequency;
@@ -43,11 +47,12 @@ protected:
 
     int bufferLen;
     double sampleRate;
+   
     bool m_mute = false;
 
     /**
     * You should override this method
     */
-    virtual double sample(double t) = 0;
+    virtual double sample(double t, int len) = 0;
 };
 

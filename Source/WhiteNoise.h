@@ -11,7 +11,7 @@ public:
     WhiteNoise() {};
     ~WhiteNoise() {};
 
-    double sample(double t) override {
+    double sample(double t, int len) override {
         return m_level * random.nextDouble();
     };
 

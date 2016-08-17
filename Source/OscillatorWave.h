@@ -55,7 +55,7 @@ public:
     double getPhase() { return m_wave->getPhase(); }
     double getFrequency() { return m_wave->getFrequency(); }
 
-    double nextSample(double t) { return m_wave->nextSample(t); }
+    double nextSample(double t, int len) { return m_wave->nextSample(t, len); }
 
     void setTitle(String t) { title->setText(t, dontSendNotification); }
 

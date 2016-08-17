@@ -8,7 +8,6 @@
       <FILE id="cagqp9" name="IWave.h" compile="0" resource="0" file="Source/IWave.h"/>
       <FILE id="umJ2JX" name="Keyboard.h" compile="0" resource="0" file="Source/Keyboard.h"/>
       <FILE id="Y1puZQ" name="SawtoothWave.h" compile="0" resource="0" file="Source/SawtoothWave.h"/>
-      <FILE id="ENflH0" name="SineWave.cpp" compile="1" resource="0" file="Source/SineWave.cpp"/>
       <FILE id="U79TP5" name="SineWave.h" compile="0" resource="0" file="Source/SineWave.h"/>
       <FILE id="cgkohR" name="SpectralViewComponent.cpp" compile="1" resource="0"
             file="Source/SpectralViewComponent.cpp"/>
@@ -42,17 +41,14 @@
         <MODULEPATH id="juce_core" path="C:/JUCE/modules"/>
         <MODULEPATH id="juce_events" path="C:/JUCE/modules"/>
         <MODULEPATH id="juce_graphics" path="C:/JUCE/modules"/>
-        <MODULEPATH id="juce_data_structures" path="C:/JUCE/modules"/>
         <MODULEPATH id="juce_gui_basics" path="C:/JUCE/modules"/>
-        <MODULEPATH id="juce_gui_extra" path="C:/JUCE/modules"/>
-        <MODULEPATH id="juce_cryptography" path="C:/JUCE/modules"/>
-        <MODULEPATH id="juce_video" path="C:/JUCE/modules"/>
-        <MODULEPATH id="juce_opengl" path="C:/JUCE/modules"/>
         <MODULEPATH id="juce_audio_basics" path="C:/JUCE/modules"/>
         <MODULEPATH id="juce_audio_devices" path="C:/JUCE/modules"/>
         <MODULEPATH id="juce_audio_formats" path="C:/JUCE/modules"/>
-        <MODULEPATH id="juce_audio_processors" path="C:/JUCE/modules"/>
         <MODULEPATH id="juce_audio_utils" path="C:/JUCE/modules"/>
+        <MODULEPATH id="juce_audio_processors" path="C:/JUCE/modules"/>
+        <MODULEPATH id="juce_gui_extra" path="C:/JUCE/modules"/>
+        <MODULEPATH id="juce_data_structures" path="C:/JUCE/modules"/>
       </MODULEPATHS>
     </VS2015>
   </EXPORTFORMATS>
@@ -63,14 +59,11 @@
     <MODULE id="juce_audio_processors" showAllCode="1" useLocalCopy="0"/>
     <MODULE id="juce_audio_utils" showAllCode="1" useLocalCopy="0"/>
     <MODULE id="juce_core" showAllCode="1" useLocalCopy="0"/>
-    <MODULE id="juce_cryptography" showAllCode="1" useLocalCopy="0"/>
     <MODULE id="juce_data_structures" showAllCode="1" useLocalCopy="0"/>
     <MODULE id="juce_events" showAllCode="1" useLocalCopy="0"/>
     <MODULE id="juce_graphics" showAllCode="1" useLocalCopy="0"/>
     <MODULE id="juce_gui_basics" showAllCode="1" useLocalCopy="0"/>
     <MODULE id="juce_gui_extra" showAllCode="1" useLocalCopy="0"/>
-    <MODULE id="juce_opengl" showAllCode="1" useLocalCopy="0"/>
-    <MODULE id="juce_video" showAllCode="1" useLocalCopy="0"/>
   </MODULES>
   <JUCEOPTIONS/>
   <LIVE_SETTINGS>

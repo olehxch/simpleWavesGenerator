@@ -11,7 +11,7 @@ public:
     SineWave() {};
     ~SineWave() {};
 
-    double sample(double t) override {
+    double sample(double t, int len) override {
         return m_level * sin(2 * double_Pi * m_frequency * t + m_phase);
     };
 
