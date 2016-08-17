@@ -25,9 +25,9 @@ public:
         double step = 1.0 / sampleRate;
         double period = step / bufferLen;
 
-        /*for (int i = 0; i < period; i++) {
-            sum += (1.0 /(2.0 * i + 1.0))*sin(2.0 * double_Pi*(2.0 * i + 1.0)*m_frequency*t);
-        }*/
+        for (int n = 0; n < period; n++) {
+            sum += sin(2.0 * double_Pi*(2.0 * n + 1.0)*m_frequency*t) / (2.0 * n + 1.0);
+        }
 
         /*for (int i = 0; i <= 100; i++) {
             double freq = m_frequency * 2;

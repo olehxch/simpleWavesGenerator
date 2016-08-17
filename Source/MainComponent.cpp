@@ -76,7 +76,7 @@ public:
 
         //waveformView.setBufferSize(samplesPerBlockExpected);
         this->m_samplesPerBlockExpected = samplesPerBlockExpected;
-        monoBuffer = new float[samplesPerBlockExpected];
+        monoBuffer = new float[samplesPerBlockExpected] {0};
     }
 
     void mixWaves(double t, float* monoBuffer, int numSamples) {
@@ -102,6 +102,9 @@ public:
         }
 
         //monoBuffer = new float[bufferToFill.numSamples];
+        // clear buffer
+        std::fill(monoBuffer, monoBuffer + m_samplesPerBlockExpected, 0);
+
         mixWaves(m_time, monoBuffer, bufferToFill.numSamples);
 
         // iterate over all available output channels

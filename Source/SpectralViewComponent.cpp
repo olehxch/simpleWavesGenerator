@@ -49,6 +49,9 @@ void SpectralViewComponent::fillBuffer(float *buffer, int len) {
     for (int i = 0; i < 128; i++) {
         float cur = buf2[i] * scale;
 
+        // check if cur is NaN
+        if (cur != cur) cur = 0.0;
+
         Line<float> l;
         l.setStart(pos, height);
         l.setEnd(pos, height - cur);
