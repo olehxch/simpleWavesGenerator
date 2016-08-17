@@ -3,6 +3,6 @@ Small application which generates different sound waves with basic oscilloscope 
 
 ## Screenshot
 
-![screenshot](https://cloud.githubusercontent.com/assets/2100323/17719867/56eb9dd0-6426-11e6-931e-af81a90e1925.PNG)
+![screenshot](https://cloud.githubusercontent.com/assets/2100323/17736507/e43c26d6-6490-11e6-887d-9387be6084fe.PNG)
 
 
