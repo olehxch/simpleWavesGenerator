@@ -40,7 +40,7 @@ void WaveformViewComponent::fillBuffer(float *buffer, int len) {
     lines.clear();
 
     int pos = 0;
-    int scale = 100.0;
+    int scale = 200.0;
     for (int i = 0; i < len - 1; i++) {
         float cur = buffer[i] * scale;
         float next = buffer[i + 1] * scale;

@@ -72,17 +72,17 @@ public:
         monoBuffer = new float[samplesPerBlockExpected] {0};
     }
 
-    void mixWaves(double t, float* monoBuffer, int numSamples) {
+    void mixWaves(float* pmonoBuffer, int numSamples) {
         Random random;
 
         // generate sin wave in mono
         for (int sample = 0; sample < numSamples; ++sample) {
-            float sine = sineWaveOsc.nextSample(m_time, numSamples);
-            float square = squareWaveOsc.nextSample(m_time, numSamples);
-            float saw = sawWaveOsc.nextSample(m_time, numSamples);
-            float triangle = triangleWaveOsc.nextSample(m_time, numSamples);
+            double sine = sineWaveOsc.nextSample(m_time, numSamples);
+            double square = squareWaveOsc.nextSample(m_time, numSamples);
+            double saw = sawWaveOsc.nextSample(m_time, numSamples);
+            double triangle = triangleWaveOsc.nextSample(m_time, numSamples);
 
-            monoBuffer[sample] = sine + square + saw + triangle;
+            pmonoBuffer[sample] = sine + square + saw + triangle;
             m_time += m_deltaTime;
         }
     }
@@ -94,7 +94,7 @@ public:
         }
 
         std::fill(monoBuffer, monoBuffer + bufferToFill.numSamples, 0);
-        mixWaves(m_time, monoBuffer, bufferToFill.numSamples);
+        mixWaves(monoBuffer, bufferToFill.numSamples);
 
         // iterate over all available output channels
         for (int channel = 0; channel < bufferToFill.buffer->getNumChannels(); ++channel)
@@ -154,8 +154,8 @@ private:
     SpectralViewComponent spectralView;
 
     // Your private member variables go here...
-    float m_time;
-    float m_deltaTime;
+    double m_time;
+    double m_deltaTime;
     float *monoBuffer;
 
     bool m_isInitialized = false;

@@ -8,10 +8,10 @@ public:
     IWave() : level(0.0), frequency(0.0), phase(0.0), sampleRate(44100.0) {};
     ~IWave() {};
 
-    void setParams(double level, double freq, double phase) {
-        this->level = level;
-        this->frequency = freq;
-        this->phase = phase;
+    void setParams(double plevel, double pfreq, double pphase) {
+        this->level = plevel;
+        this->frequency = pfreq;
+        this->phase = pphase;
     };
 
     double nextSample(double t, int len) {
